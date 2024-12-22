@@ -7,6 +7,9 @@ const app = express();
 // Serve static files
 app.use(express.static('client/public'));
 
+app.get('/a', (req, res) => {
+    res.sendFile(__dirname + '/a.html');
+})
 // Route to display votes dynamically
 app.get('/', async (req, res) => {
     try {
