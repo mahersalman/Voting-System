@@ -221,3 +221,98 @@ tbody td a:hover {
     margin-top: 10px;
   }
 }
+
+
+/* New Vote Form Specific Styles */
+#new-vote-form {
+  margin-top: 20px;
+}
+
+#new-vote-form label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #0056b3; /* Match theme */
+  margin-bottom: 8px;
+  display: block; /* Ensure labels are above inputs */
+}
+
+#new-vote-form input[type="text"],
+#new-vote-form input[type="date"],
+#new-vote-form textarea {
+  width: 100%; /* Full-width inputs */
+  max-width: 400px; /* Optional limit */
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  transition: border-color 0.3s ease;
+}
+
+#new-vote-form textarea {
+  resize: none; /* Disable resize */
+}
+
+#new-vote-form input:focus,
+#new-vote-form textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#new-vote-form button {
+  padding: 12px 25px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: block; /* Center the button */
+  margin: 0 auto;
+}
+
+#new-vote-form button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Style for the addresses section */
+#address-container {
+  margin-bottom: 20px;
+}
+
+.address-input {
+  width: calc(100% - 40px);
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#add-address-btn {
+  padding: 8px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+#add-address-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* Style for file upload */
+#file-upload {
+  margin-bottom: 20px;
+}

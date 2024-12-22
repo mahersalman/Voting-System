@@ -59,6 +59,7 @@ app.get('/', async (req, res) => {
                             ${rows}
                         </tbody>
                     </table>
+                    <button onclick="window.location.href='/new_vote';">Add New Vote</button>
                 </div>
             </body>
             </html>`;
@@ -129,6 +130,11 @@ app.get('/vote/:id', async (req, res) => {
         res.status(500).send("Error generating vote details.");
     }
 });
+
+app.get('/new_vote',(req,res) => {
+    res.sendFile(__dirname + '/new_vote.html');
+
+})
 
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
