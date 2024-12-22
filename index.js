@@ -1,8 +1,10 @@
 const express = require('express');
-const { connectToDatabase, getVoteList, getVoteData } = require('./database/db');
+const { connectToDatabase, getVoteList, getVoteData,insertVoteData } = require('./database/db');
 const { ObjectId } = require('mongodb');
 
 const app = express();
+
+app.use(express.json()); // Apply JSON parsing globally
 
 // Serve static files
 app.use(express.static('client/public'));
@@ -138,6 +140,19 @@ app.get('/new_vote',(req,res) => {
     res.sendFile(__dirname + '/new_vote.html');
 
 })
+
+app.post('/new-vote', async (req,res) =>{
+    try {
+        const voteData = req.body;
+        console.log('Vote received' , voteData);
+        const db = await connectToDatabase();
+        const votes = await insertVoteData(db,voteData);
+        res.send('Vote created successfully');
+    }catch(error){
+        console.error('Error creating vote:', error);
+    }
+
+});
 
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');

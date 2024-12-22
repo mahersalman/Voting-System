@@ -50,7 +50,7 @@ async function insertVoteData(db, voteData) {
   try {
     const collection = db.collection('vote'); 
     const result = await collection.insertOne(voteData);
-    console.log(`${result.insertedCount} documents were inserted.`);
+    console.log(`${result.insertedCount} Vote were inserted.`);
   } catch (error) {
     console.error("Error inserting data:", error);
     throw error;
