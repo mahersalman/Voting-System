@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json()); // Apply JSON parsing globally
 
 // Serve static files
-app.use(express.static('client/public'));
+app.use(express.static('public'));
 
 app.get('/a', (req, res) => {
     res.sendFile(__dirname + '/a.html');
