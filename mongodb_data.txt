@@ -1,4 +1,0 @@
-Database User Username: Cluster94244
-Database User Password: S0pYbFJHWXhM
-
-Your connection string: mongodb+srv://cluster94244.a0lfi.mongodb.net
