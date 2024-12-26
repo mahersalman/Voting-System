@@ -19,30 +19,35 @@ export default async function VoteTable() {
             ...vote,
             _id: vote._id.toString(),
         }));
+
         return (
-            <div className="container">
-                <h2>Votes List</h2>
-                <table>
+            <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-2xl overflow-hidden mt-5">
+                <h2 className="text-2xl font-bold text-blue-600 border-b-2 border-blue-600 pb-2 text-center mb-6">
+                    Votes List
+                </h2>
+                <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Voting Subject</th>
-                            <th>Status</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th></th>
+                        <tr className="bg-blue-100">
+                            <th className="px-4 py-2 text-blue-600">ID</th>
+                            <th className="px-4 py-2 text-blue-600">Voting Subject</th>
+                            <th className="px-4 py-2 text-blue-600">Status</th>
+                            <th className="px-4 py-2 text-blue-600">Start Date</th>
+                            <th className="px-4 py-2 text-blue-600">End Date</th>
+                            <th className="px-4 py-2"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {serializedVotes.map((vote) => (
-                            <tr key={vote._id}>
-                                <td title={vote._id}>{vote._id.toString().slice(0, 2)}..{vote._id.toString().slice(-2)}</td>
-                                <td>{vote.title}</td>
-                                <td>{vote.status}</td>
-                                <td>{new Date(vote.startDate).toLocaleDateString()}</td>
-                                <td>{new Date(vote.endDate).toLocaleDateString()}</td>
-                                <td>
-                                    <Link href={`/vote/${vote._id}`}>
+                        {serializedVotes.map((vote, index) => (
+                            <tr key={vote._id} className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                                <td className="px-4 py-2" title={vote._id}>
+                                    {vote._id.toString().slice(0, 2)}..{vote._id.toString().slice(-2)}
+                                </td>
+                                <td className="px-4 py-2">{vote.title}</td>
+                                <td className="px-4 py-2">{vote.status}</td>
+                                <td className="px-4 py-2">{new Date(vote.startDate).toLocaleDateString()}</td>
+                                <td className="px-4 py-2">{new Date(vote.endDate).toLocaleDateString()}</td>
+                                <td className="px-4 py-2 text-blue-500">
+                                    <Link href={`/vote/${vote._id}`} className="hover:underline">
                                         OPEN
                                     </Link>
                                 </td>
@@ -51,7 +56,9 @@ export default async function VoteTable() {
                     </tbody>
                 </table>
                 <Link href="/create-vote">
-                    <button>Add New Vote</button>
+                    <button className="mt-6 px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-transform transform hover:scale-105 mx-auto block">
+                        Add New Vote
+                    </button>
                 </Link>
             </div>
         );
