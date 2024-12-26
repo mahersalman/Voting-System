@@ -1,0 +1,5 @@
+0x123InvalidAddress
+12345
+0xabcAnotherInvalid
+notAnEthereumAddress
+0x0000
