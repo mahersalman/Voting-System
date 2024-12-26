@@ -47,7 +47,7 @@ export default async function VoteTable() {
                                 <td className="px-4 py-2">{new Date(vote.startDate).toLocaleDateString()}</td>
                                 <td className="px-4 py-2">{new Date(vote.endDate).toLocaleDateString()}</td>
                                 <td className="px-4 py-2 text-blue-500">
-                                    <Link href={`/vote/${vote._id}`} className="hover:underline">
+                                    <Link href={`/vote-detail/${vote._id}`} className="hover:underline">
                                         OPEN
                                     </Link>
                                 </td>

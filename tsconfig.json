@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./*"],
       "@config/*": ["./config/*"],
-      "@components/*": ["./components/*"]
+      "@components/*": ["./components/*"],
+      "@database/*": ["./database/*"]
 
     }
   },
