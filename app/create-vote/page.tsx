@@ -1,3 +1,5 @@
+import BackButton from "@components/backButton";
+
 export default function CreateVote() {
   return (
     <div className="bg-image w-full h-screen bg-cover bg-center bg-no-repeat flex justify-center items-center flex-col pt-16 gap-10">
@@ -126,6 +128,7 @@ export default function CreateVote() {
             </button>
           </div>
         </form>
+        <BackButton />
       </div>
     </div>
   );
