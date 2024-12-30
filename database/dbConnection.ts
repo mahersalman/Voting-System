@@ -1,6 +1,7 @@
 import { MongoClient, Db } from "mongodb";
 
-const uri = "mongodb+srv://Cluster94244:S0pYbFJHWXhM@cluster94244.a0lfi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster94244";
+//const uri = "mongodb+srv://Cluster94244:S0pYbFJHWXhM@cluster94244.a0lfi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster94244"; // atlas database
+const uri = "mongodb://127.0.0.1:27017"; // Local MongoDB URI
 const client = new MongoClient(uri);
 
 let dbInstance: Db | null = null;
