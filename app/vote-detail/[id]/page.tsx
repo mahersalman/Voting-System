@@ -10,7 +10,7 @@ const Results = dynamic(() => import('@components/results'), { ssr: true });
 export default async function VoteDetails({ params }: { params: { id: string } }) {
   const id = (await params).id;
   const vote = await getVoteData(id);
-
+  console.log('vote data : ',vote)
   if (!vote) {
     notFound();
   } 

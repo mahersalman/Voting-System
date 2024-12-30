@@ -2,12 +2,9 @@
 
 import React from 'react';
 
-interface Candidate {
-  name: string;
-  votes: number;
-}
 
-export default function VotingForm({ candidates }: { candidates: Candidate[] }) {
+
+export default function VotingForm({ candidates }: { candidates: string[]}) {
   return (
     <form
       className="bg-gray-50 p-6 rounded-lg shadow-lg mt-6 space-y-6 flex flex-col items-center"
@@ -28,8 +25,8 @@ export default function VotingForm({ candidates }: { candidates: Candidate[] }) 
         required
       >
         {candidates.map((candidate, index) => (
-          <option key={index} value={candidate.name}>
-            {candidate.name}
+          <option key={index} value={candidate}>
+            {candidate}
           </option>
         ))}
       </select>
