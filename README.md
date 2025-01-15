@@ -11,8 +11,8 @@ Key Features:
 
 Technology Stack:
 	•	Smart Contract Implementation: Solidity
-	•	Frontend Development: HTML, JavaScript, TypeScript, React.js, Tailwind CSS
-	•	Backend Development: Next.js, Node.js, MongoDB
-	•	Deployment: Ethereum testnets (Goerli, Sepolia, or MoreThanWallet) or the Ethereum Mainnet
+	•	Frontend Development: TypeScript, React.js, Tailwind CSS
+	•	Backend Development: Next.js, MongoDB
+	•	Deployment: Ethereum testnets : Sepolia
 
 This system reflects a modern approach to leveraging blockchain technology for privacy-centric and secure solutions.
