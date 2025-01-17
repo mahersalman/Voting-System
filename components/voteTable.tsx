@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { getVoteList } from '../database/dbController';
 import { getBallotDetails } from '../scripts/ContractInteract';
 
 interface Vote {
@@ -13,8 +12,6 @@ interface Vote {
 
 export default async function VoteTable() {
     try {
-        // Fetch votes directly in the component
-        //const votes = await getVoteList();
         const votes = await getBallotDetails('0x3d077E48159f8ca5BFF2C219279f73dFce8649cC');
         console.log("votes: ",votes);
         // Serialize ObjectId
