@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getVoteList } from '../database/dbController';
+import { getBallotDetails } from '../scripts/ContractInteract';
 
 interface Vote {
     _id: string;
@@ -9,11 +10,13 @@ interface Vote {
     endDate: string;
 }
 
+
 export default async function VoteTable() {
     try {
         // Fetch votes directly in the component
-        const votes = await getVoteList();
-        
+        //const votes = await getVoteList();
+        const votes = await getBallotDetails('0x3d077E48159f8ca5BFF2C219279f73dFce8649cC');
+        console.log("votes: ",votes);
         // Serialize ObjectId
         const serializedVotes = votes.map((vote) => ({
             ...vote,
@@ -28,7 +31,7 @@ export default async function VoteTable() {
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-blue-100">
-                            <th className="px-4 py-2 text-blue-600">ID</th>
+                            <th className="px-4 py-2 text-blue-600">address</th>
                             <th className="px-4 py-2 text-blue-600">Voting Subject</th>
                             <th className="px-4 py-2 text-blue-600">Status</th>
                             <th className="px-4 py-2 text-blue-600">Start Date</th>
@@ -44,8 +47,8 @@ export default async function VoteTable() {
                                 </td>
                                 <td className="px-4 py-2">{vote.title}</td>
                                 <td className="px-4 py-2">{vote.status}</td>
-                                <td className="px-4 py-2">{new Date(vote.startDate).toLocaleDateString()}</td>
-                                <td className="px-4 py-2">{new Date(vote.endDate).toLocaleDateString()}</td>
+                                <td className="px-4 py-2">{vote.startDate}</td>
+                                <td className="px-4 py-2">{vote.endDate}</td>
                                 <td className="px-4 py-2 text-blue-500">
                                     <Link href={`/vote-detail/${vote._id}`} className="hover:underline">
                                         OPEN

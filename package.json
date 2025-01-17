@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "compile": "npx hardhat compile",
     "deploy": "npx hardhat run ./scripts/deploy.ts --network localganache"
   },
   "dependencies": {

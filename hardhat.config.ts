@@ -9,7 +9,7 @@ const config: HardhatUserConfig = {
   networks: {
     localganache:{
       url: process.env.PROVIDER_URL,
-      accounts: [`0x${process.env.PRIVATE_KEY}`]
+      accounts: [`${process.env.PRIVATE_KEY}`]
     }
   }
 };

@@ -1,16 +1,17 @@
 import {ethers} from "hardhat";
 
 async function deployContract(contractName : string){
-    const Contract = await ethers.getContractFactory("contractName");
+    const Contract = await ethers.getContractFactory(contractName);
+    console.log("Deploying the VotingSystem contract...");
     const contract = await Contract.deploy();
     
     await contract.waitForDeployment();
-    console.log(`${contractName} deployed to:`, contract.address);
+    console.log(`${contractName} deployed to:`, await contract.getAddress());
 }
 
-/*
-deployContract("name").catch((error) => {
+
+deployContract("CreateBallot").catch((error) => {
     console.error("Error deploying contract:", error);
     process.exitCode = 1;
-  });
-  */
+});
+
