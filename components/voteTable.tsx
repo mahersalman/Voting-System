@@ -10,7 +10,7 @@ export default function VoteTable() {
   const { votes, setVotes } = useVotes();
 
   useEffect(() => {
-    const fetchVotes = async () => {
+     const fetchVotes = async () => {
       try {
         const ballotAddesses = await getBallotsAddresses();
         const fetchedVotes = await getBallotDetails(ballotAddesses);
@@ -28,7 +28,10 @@ export default function VoteTable() {
       <h2 className="text-2xl font-bold text-blue-600 border-b-2 border-blue-600 pb-2 text-center mb-6">
         Votes List
       </h2>
-      <table className="w-full text-left border-collapse">
+      {!votes && <p className="text-center">Loading...</p>}
+      {votes && votes.length === 0 && <p className="text-center">No votes found</p>}
+      {votes && votes.length > 0 && (
+        <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-blue-100">
             <th className="px-4 py-2 text-blue-600">Address</th>
@@ -55,7 +58,8 @@ export default function VoteTable() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>)}
+      
     </div>
   );
 }

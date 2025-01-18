@@ -1,40 +1,44 @@
 'use client';
 
-import { useAccount, useWriteContract } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 import React, { useState } from 'react';
 import { ballotAPI } from '../scripts/contractApi';
+import { ethers } from 'ethers';
+
 
 export default function VotingForm({ candidates, contractAddress }: { candidates: string[]; contractAddress: string }) {
-  const { isConnected } = useAccount(); // Get wallet connection status
+  const { address, isConnected } = useAccount();
+  const { data: walletClient } = useWalletClient();
   const [vote, setVote] = useState<string>();
 
-  // Use wagmi's useWriteContract for sending transactions
-  const { writeContract } = useWriteContract();
 
   const sendTransaction = async () => {
     if (!isConnected) {
       alert('Please connect your wallet');
       return;
     }
-
-    if (!vote) {
-      alert('Please select a candidate');
+    if (!walletClient) {
+      alert('Wallet client is not available');
       return;
     }
-    try {
-      // Call the smart contract's vote function using wagmi
-      await writeContract({
-        abi: ballotAPI, // Contract ABI
-        address: contractAddress as `0x${string}`, // Contract address
-        functionName: 'vote', // Function to call in the smart contract
-        args: [vote], 
-      });
+  try{
+      const provider = new ethers.BrowserProvider(walletClient);
+      const signer = await provider.getSigner();
+
+      const contract = new ethers.Contract(contractAddress, ballotAPI, signer);
+
+      const tx = await contract.vote(vote); // Call the vote function
+      console.log('Transaction sent:', tx.hash);
+
+      await tx.wait(); // Wait for the transaction to confirm
+      console.log('Transaction confirmed:', tx);
 
       alert('Vote submitted successfully');
     } catch (error) {
       console.error('Transaction failed:', error);
-      alert('Transaction failed');
+      alert(`Transaction failed: ${error}`);
     }
+
   };
 
   return (
