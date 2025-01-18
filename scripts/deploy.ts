@@ -2,7 +2,6 @@ import {ethers} from "hardhat";
 
 async function deployContract(contractName : string){
     const Contract = await ethers.getContractFactory(contractName);
-    console.log("Deploying the VotingSystem contract...");
     const contract = await Contract.deploy();
     
     await contract.waitForDeployment();

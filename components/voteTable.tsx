@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useEffect } from "react";
-import { getBallotDetails } from "@/scripts/ContractInteract";
+import { getBallotDetails,getBallotsAddresses } from "@/scripts/ContractInteract";
 import { useVotes } from "@/components/VoteContext";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 export default function VoteTable() {
   const { votes, setVotes } = useVotes();
@@ -10,10 +12,8 @@ export default function VoteTable() {
   useEffect(() => {
     const fetchVotes = async () => {
       try {
-        const fetchedVotes = await getBallotDetails([
-          "0x3d077E48159f8ca5BFF2C219279f73dFce8649cC",
-          "0x25Bdc0B1dd86a4eC7eE67eBa90eA21C4e22b6c44",
-        ]);
+        const ballotAddesses = await getBallotsAddresses();
+        const fetchedVotes = await getBallotDetails(ballotAddesses);
         setVotes(fetchedVotes);
       } catch (error) {
         console.error("Error fetching votes:", error);

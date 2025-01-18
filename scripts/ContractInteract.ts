@@ -4,30 +4,53 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 
-const privateKey = '0xbc98dbfe9f80aee35e9992067280650495c9e3ba032f304c03a718c727c750f2'
-
 // _______________________________ CreateBallot Contract _______________________________
 
-async function createBallot(title:string , description:string, startDate: number, endDate: number, candidateList: string[], voters: string[]){
-    // Set up provider and signer
-    const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
-    const singer = new ethers.Wallet(privateKey, provider);
-
-    const contracrtAddress = process.env.NEXT_PUBLIC_CREATE_BALLOT_CONTRACT_ADDRESS;
-    if (!contracrtAddress) {
-        throw new Error("CREATE_BALLOT_CONTRACT_ADDRESS is not defined in the environment variables");
+async function createBallot(
+    title: string,
+    description: string,
+    startDate: number,
+    endDate: number,
+    candidateList: string[],
+    voters: string[]
+  ) {
+    try {
+      // Set up provider and signer
+      const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
+  
+      const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+      if (!privateKey) {
+        throw new Error("NEXT_PUBLIC_PRIVATE_KEY is not defined in the environment variables");
+      }
+  
+      const signer = new ethers.Wallet(privateKey, provider);
+  
+      const contractAddress = process.env.NEXT_PUBLIC_CREATE_BALLOT_CONTRACT_ADDRESS;
+      if (!contractAddress) {
+        throw new Error("NEXT_PUBLIC_CREATE_BALLOT_CONTRACT_ADDRESS is not defined in the environment variables");
+      }
+  
+      const contract = new ethers.Contract(contractAddress, createBallotAPI, signer);
+  
+      // Interact with the contract
+      const tx = await contract.createBallot(title, description, startDate, endDate, candidateList, voters);
+      await tx.wait();
+  
+      console.log("Ballot Created Successfully");
+    } catch (error) {
+      console.error("Error creating ballot:", error);
+      throw error;
     }
-    const contract = new ethers.Contract(contracrtAddress, createBallotAPI, singer);
-
-    const tx = await contract.createBallot(title, description, startDate, endDate, candidateList, voters);
-    await tx.wait();
-    console.log("Ballot Created Successfully");
-}
+  }
 
 
-async function getBallotsAddresses(){
+export async function getBallotsAddresses(){
     // Set up provider and signer
     const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
+    const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+    if (!privateKey) {
+        throw new Error("NEXT_PUBLIC_PRIVATE_KEY is not defined in the environment variables");
+    }
     const singer = new ethers.Wallet(privateKey, provider);
 
     const contracrtAddress = process.env.NEXT_PUBLIC_CREATE_BALLOT_CONTRACT_ADDRESS;
@@ -37,16 +60,17 @@ async function getBallotsAddresses(){
     const contract = new ethers.Contract(contracrtAddress, createBallotAPI, singer);
 
     const ballots = await contract.getBallots();
+    return ballots;
 
 }
 
 
 
-// createBallot("Ballot 1", "This is the first ballot", 1620000000, 1630000000, ["Candidate 1", "Candidate 2"], ["0xf7731312eC973D6896B827b91B558dC3ec65F5C9","0xCB33CDCE3c8855F8f6aa66a639d9067a38662AD1"]).catch((error) => {
+// createBallot("TEST : Ballot 1", "This is the first ballot", 1620700000, 1630000880, ["maher", "salman"], ["0x25629760Af7944A32f08c95F8eb91EfF9f5b6d36","0xa91910efDe6cCe6A142ccA0B209cAcfd38C55bE3"]).catch((error) => {
 //     console.error("Error creating ballot:", error);
 //     process.exitCode = 1;
 // });
-// createBallot("Ballot 2", "This is the second ballot", 1630000000, 1640000000, ["Can 1", "Can 2"], ["0xf7731312eC973D6896B827b91B558dC3ec65F5C9","0xCB33CDCE3c8855F8f6aa66a639d9067a38662AD1"]).catch((error) => {
+// createBallot("TEST : Ballot 2", "This is the second ballot", 1630220000, 1640044000, ["adam", "porat"], ["0x25629760Af7944A32f08c95F8eb91EfF9f5b6d36","0xa91910efDe6cCe6A142ccA0B209cAcfd38C55bE3"]).catch((error) => {
 //     console.error("Error creating ballot:", error);
 //     process.exitCode = 1;
 // });
@@ -61,13 +85,15 @@ async function getBallotsAddresses(){
 
 // _______________________________ Ballot Contract _______________________________
 
-const ballot_contract = ["0x3d077E48159f8ca5BFF2C219279f73dFce8649cC"];
-
 export async function getBallotDetails(ballotContractAddresses: string[]){
     // Set up provider and signer
     let ballots = [];
     try {
         const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
+        const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+        if (!privateKey) {
+            throw new Error("NEXT_PUBLIC_PRIVATE_KEY is not defined in the environment variables");
+        }
         const singer = new ethers.Wallet(privateKey, provider);
 
         for (let i = 0; i < ballotContractAddresses.length; i++) {
@@ -88,7 +114,19 @@ export async function getBallotDetails(ballotContractAddresses: string[]){
     return ballots;
 }
 
-// getBallotDetails(ballot_contract).catch((error) => {
-//     console.error("Error getting ballot details:", error);
-//     process.exitCode = 1;
-// });
+
+// async function main() {
+//     try {
+//         const ballotDetails = await getBallotDetails([
+//             "0x56F8Ed174a728049534F200679Cb1Ca5A8185C30",
+//             "0x7741827E4F0261Fec114AE38F6F8a353f8929CdE",
+//         ]);
+
+//         console.log("Ballot Details:", ballotDetails);
+//     } catch (error) {
+//         console.error("Error getting ballot details:", error);
+//         process.exitCode = 1;
+//     }
+// }
+
+// main();
