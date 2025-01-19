@@ -2,9 +2,7 @@
 
 import { useAccount, useWalletClient } from 'wagmi';
 import React, { useState } from 'react';
-import { ballotAPI } from '../scripts/contractApi';
-import { ethers } from 'ethers';
-
+import { ballot_voting } from "@/scripts/ContractInteract";
 
 export default function VotingForm({ candidates, contractAddress }: { candidates: string[]; contractAddress: string }) {
   const { address, isConnected } = useAccount();
@@ -21,21 +19,14 @@ export default function VotingForm({ candidates, contractAddress }: { candidates
       alert('Wallet client is not available');
       return;
     }
-  try{
-      const provider = new ethers.BrowserProvider(walletClient);
-      const signer = await provider.getSigner();
-
-      const contract = new ethers.Contract(contractAddress, ballotAPI, signer);
-
-      const tx = await contract.vote(vote); // Call the vote function
-      console.log('Transaction sent:', tx.hash);
-
-      await tx.wait(); // Wait for the transaction to confirm
-      console.log('Transaction confirmed:', tx);
-
+    try{
+      if (vote) {
+        await ballot_voting(walletClient, contractAddress, vote);
+      } else {
+        alert('Please select a candidate');
+      }
       alert('Vote submitted successfully');
     } catch (error) {
-      console.error('Transaction failed:', error);
       alert(`Transaction failed: ${error}`);
     }
 

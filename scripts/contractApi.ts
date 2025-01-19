@@ -7,7 +7,6 @@ export const ballotAPI = [
     'function vote(string memory _candidate) public',
     'function getBallotDetails() public view returns (string[] memory)',
     'function getResults() public view returns (string[] memory, uint256[] memory)',
-    // Public variables
     'function title() public view returns (string)',
     'function description() public view returns (string)',
     'function start_date() public view returns (uint256)',

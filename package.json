@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "deploy": "npx hardhat run ./scripts/deploy.ts --network sepolia",
-    "interact": "npx ts-node ./scripts/ContractInteract.ts"    
+    "interact": "npx ts-node ./scripts/ContractInteract.ts"
   },
   "dependencies": {
     "@reown/appkit": "^1.6.0",

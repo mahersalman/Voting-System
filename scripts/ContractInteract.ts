@@ -65,49 +65,64 @@ export async function getBallotsAddresses(){
 
 // _______________________________ Ballot Contract _______________________________
 
-export async function getBallotDetails(ballotContractAddresses: string[]){
-    // Set up provider and signer
-    let ballots = [];
-    try {
-        const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
-        const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
-        if (!privateKey) {
-            throw new Error("NEXT_PUBLIC_PRIVATE_KEY is not defined in the environment variables");
-        }
-        const singer = new ethers.Wallet(privateKey, provider);
+export async function getBallotDetails(ballotContractAddresses: string[]) {
+  // Set up provider and signer
+  let ballots = [];
+  try {
+      const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
+      const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+      if (!privateKey) {
+          throw new Error("NEXT_PUBLIC_PRIVATE_KEY is not defined in the environment variables");
+      }
+      const singer = new ethers.Wallet(privateKey, provider);
 
-        for (let i = 0; i < ballotContractAddresses.length; i++) {
-            const contract = new ethers.Contract(ballotContractAddresses[i], ballotAPI, singer);
-            const title = await contract.title();
-            const description = await contract.description();
-            const startDate = await contract.start_date();
-            const endDate = await contract.end_date();
-            const results = await contract.getResults();
-            ballots.push({"_id":ballotContractAddresses[i], "title":title, "description":description, "startDate":startDate, "endDate":endDate, "results":results, "status":"Open"});
-        }
+      const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds since 1970
 
-    }catch (error){
-        console.error("Error getting network:", error);
-        
-    }
+      for (let i = 0; i < ballotContractAddresses.length; i++) {
+          const contract = new ethers.Contract(ballotContractAddresses[i], ballotAPI, singer);
+          const title = await contract.title();
+          const description = await contract.description();
+          const startDate = await contract.start_date();
+          const endDate = await contract.end_date();
+          const results = await contract.getResults();
 
-    return ballots;
+          let status = "";
+          if (endDate < currentTime) {
+              status = "Finished";
+          } else if (startDate > currentTime) {
+              status = "Coming";
+          } else if (startDate <= currentTime && endDate >= currentTime) {
+              status = "Active";
+          }
+
+          ballots.push({
+              "_id": ballotContractAddresses[i],
+              "title": title,
+              "description": description,
+              "startDate": startDate,
+              "endDate": endDate,
+              "results": results,
+              "status": status
+          });
+      }
+
+  } catch (error) {
+      console.error("Error getting network:", error);
+  }
+
+  return ballots;
 }
 
-
-
-// async function main() {
-//     try {
-//         const ballotDetails = await getBallotDetails([
-//             "0x56F8Ed174a728049534F200679Cb1Ca5A8185C30",
-//             "0x7741827E4F0261Fec114AE38F6F8a353f8929CdE",
-//         ]);
-
-//         console.log("Ballot Details:", ballotDetails);
-//     } catch (error) {
-//         console.error("Error getting ballot details:", error);
-//         process.exitCode = 1;
-//     }
-// }
-
-// main();
+export async function ballot_voting(walletClient: any , contractAddress: string, candidate:string){
+  try {
+      const provider = new ethers.BrowserProvider(walletClient);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, ballotAPI, signer);
+      const tx = await contract.vote(candidate);
+      await tx.wait();
+      console.log("Voted Successfully");
+  } catch (error) {
+      console.error("Error voting:", error);
+      throw error;
+  }
+}

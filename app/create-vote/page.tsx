@@ -3,15 +3,14 @@ import { useAccount, useWalletClient } from 'wagmi';
 import React, { useState } from 'react';
 import BackButton from '@components/backButton';
 import Navbar from '@/components/navbar';
-import {createNewBallot} from "@/scripts/ContractInteract";
+import { createNewBallot } from '@/scripts/ContractInteract';
 
 export default function CreateVote() {
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
-  const [addresses, setAddresses] = useState<string[]>([]);
+  const [manualAddresses, setManualAddresses] = useState<string>("");
 
   const isValidEthereumAddress = (address: string) => {
-    // Check if the address is 42 characters long, starts with '0x', and contains only hex characters
     const regex = /^0x[a-fA-F0-9]{40}$/;
     return regex.test(address);
   };
@@ -23,7 +22,7 @@ export default function CreateVote() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;
-      const lines = content.split('\n').map((line) => line.trim()); // Split file content by newlines
+      const lines = content.split('\n').map((line) => line.trim());
 
       const invalidAddresses = lines.filter((line) => !isValidEthereumAddress(line));
       if (invalidAddresses.length > 0) {
@@ -31,7 +30,10 @@ export default function CreateVote() {
         return;
       }
       alert('All addresses are valid!');
-      setAddresses(lines); 
+
+      // Add file-uploaded addresses to the manual addresses textarea
+      const newAddresses = [...new Set([...manualAddresses.split('\n').filter(Boolean), ...lines])];
+      setManualAddresses(newAddresses.join('\n'));
     };
 
     reader.readAsText(file);
@@ -41,38 +43,48 @@ export default function CreateVote() {
     e.preventDefault();
     const form = e.currentTarget;
 
-    // Extract values from the form
     const title = (form.elements.namedItem('title') as HTMLInputElement).value;
     const start_date = (form.elements.namedItem('start_date') as HTMLInputElement).value;
     const end_date = (form.elements.namedItem('end_date') as HTMLInputElement).value;
     const description = (form.elements.namedItem('description') as HTMLTextAreaElement).value;
     const candidates = (form.elements.namedItem('candidates') as HTMLInputElement).value;
-    const fileInput = form.elements.namedItem('file-upload') as HTMLInputElement;
 
-    // Validate all fields
     if (!title || !start_date || !end_date || !description || !candidates) {
       alert('Please fill out all fields.');
       return;
     }
-    // Ensure at least one candidate is entered
+
     const candidateList = candidates.split(',').map((c) => c.trim());
     if (candidateList.length === 0) {
       alert('Please enter at least one candidate.');
       return;
     }
 
-  // Ensure addresses are uploaded and valid
-    if (!addresses || addresses.length === 0) {
-      alert('Please upload a valid addresses file.');
+    const manualAddressList = manualAddresses
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line !== "" && isValidEthereumAddress(line));
+
+    if (manualAddressList.length === 0) {
+      alert('Please provide valid addresses either via file upload or manual input.');
       return;
     }
 
-    try{
-      await createNewBallot(isConnected,walletClient, title, description, new Date(start_date).getTime() / 1000, new Date(end_date).getTime() / 1000, candidateList, addresses);
+    try {
+      await createNewBallot(
+        isConnected,
+        walletClient,
+        title,
+        description,
+        new Date(start_date).getTime() / 1000,
+        new Date(end_date).getTime() / 1000,
+        candidateList,
+        manualAddressList
+      );
       alert('Ballot created successfully!');
-    }catch(error){
+    } catch (error) {
       alert(error);
-    };
+    }
   };
 
   return (
@@ -83,12 +95,8 @@ export default function CreateVote() {
           New Vote
         </h2>
         <form id="new-vote-form" className="space-y-6" onSubmit={handleSubmit}>
-          {/* Title Field */}
           <div>
-            <label
-              htmlFor="title"
-              className="block text-lg font-bold text-blue-600 mb-2"
-            >
+            <label htmlFor="title" className="block text-lg font-bold text-blue-600 mb-2">
               Title
             </label>
             <input
@@ -100,13 +108,9 @@ export default function CreateVote() {
             />
           </div>
 
-          {/* Start Date and End Date Fields */}
           <div className="flex flex-wrap gap-4">
             <div className="flex-1">
-              <label
-                htmlFor="start_date"
-                className="block text-lg font-bold text-blue-600 mb-2"
-              >
+              <label htmlFor="start_date" className="block text-lg font-bold text-blue-600 mb-2">
                 Start Date
               </label>
               <input
@@ -118,10 +122,7 @@ export default function CreateVote() {
               />
             </div>
             <div className="flex-1">
-              <label
-                htmlFor="end_date"
-                className="block text-lg font-bold text-blue-600 mb-2"
-              >
+              <label htmlFor="end_date" className="block text-lg font-bold text-blue-600 mb-2">
                 End Date
               </label>
               <input
@@ -134,12 +135,8 @@ export default function CreateVote() {
             </div>
           </div>
 
-          {/* Description Field */}
           <div>
-            <label
-              htmlFor="description"
-              className="block text-lg font-bold text-blue-600 mb-2"
-            >
+            <label htmlFor="description" className="block text-lg font-bold text-blue-600 mb-2">
               Description
             </label>
             <textarea
@@ -151,12 +148,8 @@ export default function CreateVote() {
             ></textarea>
           </div>
 
-          {/* Candidates Field */}
           <div>
-            <label
-              htmlFor="candidates"
-              className="block text-lg font-bold text-blue-600 mb-2"
-            >
+            <label htmlFor="candidates" className="block text-lg font-bold text-blue-600 mb-2">
               Candidates (Comma-separated)
             </label>
             <input
@@ -169,12 +162,8 @@ export default function CreateVote() {
             />
           </div>
 
-          {/* File Upload Field */}
           <div>
-            <label
-              htmlFor="file-upload"
-              className="block text-lg font-bold text-blue-600 mb-2"
-            >
+            <label htmlFor="file-upload" className="block text-lg font-bold text-blue-600 mb-2">
               Upload Addresses File (.txt)
             </label>
             <input
@@ -182,13 +171,26 @@ export default function CreateVote() {
               id="file-upload"
               name="file-upload"
               accept=".txt"
-              required
               className="w-full max-w-lg p-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               onChange={handleFileChange}
             />
           </div>
 
-          {/* Submit Button */}
+          <div>
+            <label htmlFor="manual-addresses" className="block text-lg font-bold text-blue-600 mb-2">
+              Addresses (One per line)
+            </label>
+            <textarea
+              id="manual-addresses"
+              name="manual-addresses"
+              rows={6}
+              placeholder="Enter addresses manually, one per line"
+              className="w-full max-w-lg p-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              value={manualAddresses}
+              onChange={(e) => setManualAddresses(e.target.value)}
+            ></textarea>
+          </div>
+
           <div>
             <button
               type="submit"

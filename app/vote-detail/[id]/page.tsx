@@ -16,7 +16,7 @@ export default function VoteDetails() {
   if (!vote) {
     return <div className="text-red-600 text-center mt-10">Vote not found</div>;
   }
-
+  
   return (
     <div className="bg-image w-full h-screen bg-cover bg-center bg-no-repeat flex justify-center items-center flex-row pt-16 gap-10">
       <Navbar />
@@ -49,7 +49,7 @@ export default function VoteDetails() {
       </div>
     
     <div>
-      <Results results={vote.results} />
+      <Results results={vote.results} status={vote.status} />
     </div>
 
     </div>
