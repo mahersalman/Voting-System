@@ -1,7 +1,6 @@
 import {ethers} from "ethers";
 import {createBallotAPI,ballotAPI} from "./contractApi";
 import * as dotenv from "dotenv";
-import { get } from "http";
 dotenv.config();
 
 
