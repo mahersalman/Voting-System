@@ -16,15 +16,6 @@ This project involves the development of a blockchain-based voting system design
 - **Transparency**: Immutable smart contracts ensure integrity and trust.
 - **Real-Time Updates**: Dynamic tracking of voting progress and results.
 
-## Technology Stack
-
-- **Smart Contract Implementation**: Solidity
-- **Frontend Development**: TypeScript, React.js, Tailwind CSS
-- **Backend Development**: Next.js
-- **Deployment**: Ethereum testnet: Sepolia
-
-This system reflects a modern approach to leveraging blockchain technology for privacy-centric and secure solutions.
-
 ---
 
 ## Getting Started
@@ -123,5 +114,5 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 
 ## Contact
 
-For inquiries, reach out to the project maintainer at [your-email@example.com].
+For inquiries, reach out to the project maintainer at [mahersal001@gmail.com].
 
