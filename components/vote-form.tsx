@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { ballot_voting } from "@/scripts/ContractInteract";
 
 export default function VotingForm({ candidates, contractAddress }: { candidates: string[]; contractAddress: string }) {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const [vote, setVote] = useState<string>();
 

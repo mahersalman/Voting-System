@@ -6,7 +6,7 @@ import Navbar from '@/components/navbar';
 import { createNewBallot } from '@/scripts/ContractInteract';
 
 export default function CreateVote() {
-  const { address, isConnected } = useAccount();
+  const {  isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const [manualAddresses, setManualAddresses] = useState<string>("");
 
