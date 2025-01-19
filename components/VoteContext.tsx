@@ -7,6 +7,7 @@ interface Vote {
   description: string;
   startDate: bigint;
   endDate: bigint;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   results: any[];
   status: string;
 }
