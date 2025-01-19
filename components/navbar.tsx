@@ -11,7 +11,7 @@ export default function Navbar() {
             <h1 className="text-4xl font-extrabold uppercase tracking-widest bg-gradient-to-r from-pink-500 via-yellow-500 to-blue-500 bg-clip-text text-transparent shadow-md">
                 Voting System
             </h1>
-            
+            {/* @ts-ignore*/}
              <appkit-button />
         </div>
     );
