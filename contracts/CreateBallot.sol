@@ -6,6 +6,16 @@ import {Ballot} from './Ballot.sol';
 contract CreateBallot {
 
     address[] public ballotContractsAddresses;
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You are not the owner of the ballot");
+        _;
+    }
     function createBallot(
                           string memory _title,
                           string memory _description,
@@ -21,4 +31,13 @@ contract CreateBallot {
         return ballotContractsAddresses; 
     }
 
+    function deleteBallot(address _ballotAddress) public onlyOwner {
+        for (uint256 i = 0; i < ballotContractsAddresses.length; i++) {
+            if (ballotContractsAddresses[i] == _ballotAddress) {
+                ballotContractsAddresses[i] = ballotContractsAddresses[ballotContractsAddresses.length - 1];
+                ballotContractsAddresses.pop();
+                break;
+            }
+        }
+    }
 }

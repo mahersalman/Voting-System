@@ -29,6 +29,8 @@ contract Ballot {
     }
 
     function vote(string memory _candidate) public {
+        require(block.timestamp >= start_date, "Voting has not started yet!");
+        require(block.timestamp <= end_date, "Voting has ended!");
         require(Voters[msg.sender], "You have already voted or you cant vote!");
         results[_candidate] = results[_candidate] + 1;
         Voters[msg.sender] = false; 

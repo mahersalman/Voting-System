@@ -1,6 +1,7 @@
 import {ethers} from "ethers";
 import {createBallotAPI,ballotAPI} from "./contractApi";
 import * as dotenv from "dotenv";
+import { get } from "http";
 dotenv.config();
 
 
@@ -45,23 +46,16 @@ export async function createNewBallot(
 export async function getBallotsAddresses(){
     // Set up provider and signer
     const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
-    const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
-    if (!privateKey) {
-        throw new Error("NEXT_PUBLIC_PRIVATE_KEY is not defined in the environment variables");
-    }
-    const singer = new ethers.Wallet(privateKey, provider);
-
     const contracrtAddress = process.env.NEXT_PUBLIC_CREATE_BALLOT_CONTRACT_ADDRESS;
     if (!contracrtAddress) {
         throw new Error("CREATE_BALLOT_CONTRACT_ADDRESS is not defined in the environment variables");
     }
-    const contract = new ethers.Contract(contracrtAddress, createBallotAPI, singer);
+    const contract = new ethers.Contract(contracrtAddress, createBallotAPI, provider);
 
     const ballots = await contract.getBallots();
     return ballots;
 
 }
-
 
 // _______________________________ Ballot Contract _______________________________
 
@@ -70,16 +64,10 @@ export async function getBallotDetails(ballotContractAddresses: string[]) {
   let ballots = [];
   try {
       const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_PROVIDER_URL);
-      const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
-      if (!privateKey) {
-          throw new Error("NEXT_PUBLIC_PRIVATE_KEY is not defined in the environment variables");
-      }
-      const singer = new ethers.Wallet(privateKey, provider);
-
-      const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds since 1970
+      const currentTime = Math.floor(Date.now() / 1000); // Current time 
 
       for (let i = 0; i < ballotContractAddresses.length; i++) {
-          const contract = new ethers.Contract(ballotContractAddresses[i], ballotAPI, singer);
+          const contract = new ethers.Contract(ballotContractAddresses[i], ballotAPI, provider);
           const title = await contract.title();
           const description = await contract.description();
           const startDate = await contract.start_date();
@@ -109,9 +97,9 @@ export async function getBallotDetails(ballotContractAddresses: string[]) {
   } catch (error) {
       console.error("Error getting network:", error);
   }
-
   return ballots;
 }
+
 
 export async function ballot_voting(walletClient: any , contractAddress: string, candidate:string){
   try {
