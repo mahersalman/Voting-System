@@ -59,7 +59,11 @@ export default function VoteTable() {
           ))}
         </tbody>
       </table>)}
-      
+      <Link href="/create-vote">
+              <button className="mt-6 px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-transform transform hover:scale-105 mx-auto block">
+                  Add New Vote
+              </button>
+        </Link>
     </div>
   );
 }

@@ -1,10 +1,13 @@
 'use client';
-
+import { useAccount, useWalletClient } from 'wagmi';
 import React, { useState } from 'react';
 import BackButton from '@components/backButton';
-import { stat } from 'fs';
+import Navbar from '@/components/navbar';
+import {createNewBallot} from "@/scripts/ContractInteract";
 
 export default function CreateVote() {
+  const { address, isConnected } = useAccount();
+  const { data: walletClient } = useWalletClient();
   const [addresses, setAddresses] = useState<string[]>([]);
 
   const isValidEthereumAddress = (address: string) => {
@@ -34,7 +37,7 @@ export default function CreateVote() {
     reader.readAsText(file);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
 
@@ -63,43 +66,18 @@ export default function CreateVote() {
       alert('Please upload a valid addresses file.');
       return;
     }
-    // Construct the JSON object
-    const formData = {
-      title,
-      startDate: start_date,
-      endDate: end_date,
-      description,
-      candidates: candidateList,
-      addresses, 
-      status: 'Upcoming',
-    };
-    // Debugging - Log the JSON
-    console.log('Form Data:', formData);
 
-    // Example of submitting JSON to the server
-    fetch('/api/vote', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert('Form submitted successfully!');
-          form.reset(); // Optional: Reset the form
-        } else {
-          alert('Failed to submit the form. Please try again.');
-        }
-      })
-      .catch((error) => {
-        console.error('Error submitting form:', error);
-        alert('An error occurred while submitting the form.');
-      });
+    try{
+      await createNewBallot(isConnected,walletClient, title, description, new Date(start_date).getTime() / 1000, new Date(end_date).getTime() / 1000, candidateList, addresses);
+      alert('Ballot created successfully!');
+    }catch(error){
+      alert(error);
     };
+  };
 
   return (
     <div className="bg-image w-full h-screen bg-cover bg-center bg-no-repeat flex justify-center items-center flex-col pt-16 gap-10">
+      <Navbar />
       <div className="max-w-4xl mx-auto p-10 bg-white rounded-xl shadow-2xl overflow-hidden mt-5 hover:scale-105 transition-transform">
         <h2 className="text-2xl font-bold text-blue-600 border-b-2 border-blue-600 pb-2 mb-6 text-center">
           New Vote
