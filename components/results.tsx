@@ -1,7 +1,9 @@
 import React from 'react';
 
-export default function Results({ results, status }: { results: any[]; status: string }) {
-  // Find the winner if the status is "finished"
+export default function Results(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  { results, status }: { results: any[]; status: string }
+) {
   const winnerIndex = results[1].reduce((maxIndex: number, value: number, index: number, array: number[]) => (value > array[maxIndex] ? index : maxIndex), 0);
   const winner = results[0][winnerIndex];
   const winnerVotes = results[1][winnerIndex];

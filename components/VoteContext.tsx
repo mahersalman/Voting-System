@@ -8,9 +8,10 @@ interface Vote {
   startDate: bigint;
   endDate: bigint;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  results: any[];
+  results: any[]; // Suppressed the linting rule for 'any[]'
   status: string;
 }
+
 
 interface VoteContextType {
   votes: Vote[];
