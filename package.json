@@ -37,7 +37,7 @@
     "@nomicfoundation/ignition-core": "^0.15.9",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
-    "@types/chai": "^5.0.1",
+    "@types/chai": "^4.3.20",
     "@types/mocha": "^10.0.10",
     "@types/node": "^20",
     "@types/react": "^19.0.7",
